@@ -2,6 +2,7 @@ interface StreakData {
   count: number;
   lastUpdate: string;
   lastSevenDays: boolean[];
+  todayCompleted: boolean;
 }
 
 export function updateStreak() {
@@ -13,11 +14,12 @@ export function updateStreak() {
   const streakData: StreakData = streakDataStr ? JSON.parse(streakDataStr) : {
     count: 0,
     lastUpdate: '',
-    lastSevenDays: [false, false, false, false, false, false, false]
+    lastSevenDays: [false, false, false, false, false, false, false],
+    todayCompleted: false
   };
 
   // If this is the first action of the day
-  if (streakData.lastUpdate !== today) {
+  if (streakData.lastUpdate !== today && !streakData.todayCompleted) {
     // Update streak count
     if (isConsecutiveDay(streakData.lastUpdate, today)) {
       streakData.count += 1;
@@ -33,10 +35,17 @@ export function updateStreak() {
     streakData.lastSevenDays.pop();
     streakData.lastSevenDays.unshift(true);
     
-    // Update last update timestamp
+    // Update last update timestamp and mark today as completed
     streakData.lastUpdate = today;
+    streakData.todayCompleted = true;
     
     // Save updated streak data
+    localStorage.setItem('streakData', JSON.stringify(streakData));
+  }
+
+  // Check if it's a new day
+  if (streakData.lastUpdate !== today) {
+    streakData.todayCompleted = false;
     localStorage.setItem('streakData', JSON.stringify(streakData));
   }
 }
@@ -46,7 +55,8 @@ export function getStreakData(): StreakData {
   return streakDataStr ? JSON.parse(streakDataStr) : {
     count: 0,
     lastUpdate: '',
-    lastSevenDays: [false, false, false, false, false, false, false]
+    lastSevenDays: [false, false, false, false, false, false, false],
+    todayCompleted: false
   };
 }
 
