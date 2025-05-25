@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Calendar, ArrowRight, Sparkles } from 'lucide-react';
 import Header from '../components/Header';
 import StreakTracker from '../components/StreakTracker';
 import Button from '../components/Button';
 import { useTheme } from '../contexts/ThemeContext';
 import { useNavigate } from '../hooks/useNavigate';
 import { getStreakData } from '../utils/streak';
-
-const quotes = [
-  "The only way to do great work is to love what you do.",
-  "Small actions compound into remarkable results.",
-  "Consistency trumps intensity every time.",
-  "What you do every day matters more than what you do once in a while.",
-  "Progress is not always linear. Keep showing up.",
-  "Momentum builds momentum.",
-  "The best time to start was yesterday. The second best time is now."
-];
+import { getRandomQuote } from '../utils/arrowMode';
 
 const Tracker: React.FC = () => {
   const [streakDays, setStreakDays] = useState(0);
@@ -28,7 +19,7 @@ const Tracker: React.FC = () => {
     const { count, lastSevenDays } = getStreakData();
     setStreakDays(count);
     setLastSevenDays(lastSevenDays);
-    setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
+    setQuote(getRandomQuote());
   }, []);
 
   return (
@@ -39,7 +30,7 @@ const Tracker: React.FC = () => {
         <div className="w-full max-w-md">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
             <Calendar className="mr-2" size={24} />
-            Your Momentum
+            Your Alignment Streak
           </h1>
           
           <StreakTracker 
@@ -49,7 +40,10 @@ const Tracker: React.FC = () => {
           />
           
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm mb-6">
-            <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">Arrow Wisdom</h3>
+            <div className="flex items-center mb-3">
+              <Sparkles className="mr-2" size={18} />
+              <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Arrow Wisdom</h3>
+            </div>
             <blockquote className="border-l-4 border-indigo-500 pl-4 italic text-gray-600 dark:text-gray-300">
               {quote}
             </blockquote>
@@ -60,7 +54,7 @@ const Tracker: React.FC = () => {
               onClick={() => navigate('/daily-action')}
               fullWidth
             >
-              <span>Log Today's Action</span>
+              <span>Lock In Today's Action</span>
               <ArrowRight className="ml-2" size={18} />
             </Button>
             

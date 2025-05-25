@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, ArrowRight, Sparkles } from 'lucide-react';
 import Header from '../components/Header';
 import Input from '../components/Input';
@@ -24,6 +24,17 @@ const DailyAction: React.FC = () => {
     { id: 'create', name: 'create', emoji: '✨' },
     { id: 'connect', name: 'connect', emoji: '🤝' }
   ];
+
+  useEffect(() => {
+    // Check for remixed action
+    const remixedAction = localStorage.getItem('remixAction');
+    if (remixedAction) {
+      const { text, tag } = JSON.parse(remixedAction);
+      setAction(text);
+      setSelectedTag(tag);
+      localStorage.removeItem('remixAction');
+    }
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,7 +114,7 @@ const DailyAction: React.FC = () => {
                 disabled={!action.trim() || !selectedTag}
               >
                 <Check className="mr-2" size={18} />
-                <span>Log Action</span>
+                <span>Lock It In</span>
               </Button>
             </div>
           </form>
@@ -112,7 +123,7 @@ const DailyAction: React.FC = () => {
         {arrowMode && (
           <div className="mt-4 p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl text-sm text-indigo-800 dark:text-indigo-200 max-w-md flex items-start">
             <Sparkles className="mr-2 mt-0.5 flex-shrink-0" size={16} />
-            <p>Arrow Mode suggests aligned actions based on common high-leverage habits.</p>
+            <p>Arrow Mode suggests high-leverage actions aligned with your goals.</p>
           </div>
         )}
       </main>
